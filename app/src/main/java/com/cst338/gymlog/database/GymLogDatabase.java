@@ -1,4 +1,4 @@
-package com.cst338.gymlog.Database;
+package com.cst338.gymlog.database;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,14 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.cst338.gymlog.Database.entities.GymLog;
+import com.cst338.gymlog.database.entities.GymLog;
 import com.cst338.gymlog.MainActivity;
+import com.cst338.gymlog.database.typeConverters.LocalDateTypeConverter;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@TypeConverters(LocalDateTypeConverter.class)
 @Database(entities = {GymLog.class}, version = 1, exportSchema = false)
 public abstract class GymLogDatabase extends RoomDatabase {
 
