@@ -20,7 +20,7 @@
 
     <TextView
         android:id="@+id/exerciseLabelTextView"
-        android:layout_width="132dp"
+        android:layout_width="100dp"
         android:layout_height="43dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
@@ -88,6 +88,7 @@
         app:layout_constraintStart_toEndOf="@+id/repLabelTextView" />
 
     <Button
+        android:id="@+id/logButton"
         android:layout_width="390dp"
         android:layout_height="205dp"
         android:layout_marginTop="16dp"
@@ -95,7 +96,7 @@
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/repInputEditText"/>
+        app:layout_constraintTop_toBottomOf="@id/repInputEditText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
