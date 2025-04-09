@@ -23,7 +23,6 @@ import java.util.concurrent.Future;
 public class GymLogRepository {
     private final GymLogDAO gymLogDAO;
     private final UserDAO userDAO;
-    private ArrayList<GymLog> allLogs;
     private static GymLogRepository repository;
 
     /**
@@ -35,7 +34,7 @@ public class GymLogRepository {
         GymLogDatabase db = GymLogDatabase.getDatabase(application);
         this.gymLogDAO = db.gymLogDAO();
         this.userDAO = db.userDAO();
-        this.allLogs = (ArrayList<GymLog>) this.gymLogDAO.getAllRecords();
+        ArrayList<GymLog> allLogs = (ArrayList<GymLog>) this.gymLogDAO.getAllRecords();
     }
 
     /**

@@ -7,6 +7,11 @@ import com.cst338.gymlog.database.GymLogDatabase;
 
 import java.util.Objects;
 
+/**
+ * Name: Sydney Stalker
+ * Date: 4/2/25
+ * Description: Room entity for managing user account data.
+ */
 @Entity(tableName = GymLogDatabase.USER_TABLE)
 public class User {
     @PrimaryKey(autoGenerate = true)
@@ -15,12 +20,24 @@ public class User {
     private String password;
     private boolean isAdmin;
 
+    /**
+     * Constructs a non-admin user with the given username and password.
+     *
+     * @param username the user's username
+     * @param password the user's password
+     */
     public User(String username, String password) {
         this.username = username;
         this.password = password;
         isAdmin = false;
     }
 
+    /**
+     * Compares this User object with another for equality based on fields.
+     *
+     * @param o the object to compare with
+     * @return true if the objects are equal; false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -28,11 +45,17 @@ public class User {
         return id == user.id && isAdmin == user.isAdmin && Objects.equals(username, user.username) && Objects.equals(password, user.password);
     }
 
+    /**
+     * Computes a hash code for the User object based on its fields.
+     *
+     * @return hash code for the User object
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, username, password, isAdmin);
     }
 
+    //Auto Generated Getters and Setters
     public int getId() {
         return id;
     }

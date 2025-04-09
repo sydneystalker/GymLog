@@ -26,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
      * On Create
      * Called when the activity is created. Initializes view binding and sets up
      * a click listener for the login button.
-     *
      * @param savedInstanceState Bundle containing the activity's previously saved state, if any.
      */
     @Override
@@ -77,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Toast Maker
      * Displays a Toast message to the user.
-     *
      * @param message The message to display.
      */
     private void toastMaker(String message) {
@@ -87,7 +85,6 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Login Intent Factory
      * Creates an Intent to start the LoginActivity.
-     *
      * @param context Context from which the intent is created.
      * @return A configured Intent to start LoginActivity.
      */
