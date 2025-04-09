@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,11 +15,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cst338.gymlog.database.GymLogRepository;
 import com.cst338.gymlog.database.entities.GymLog;
 import com.cst338.gymlog.database.entities.User;
 import com.cst338.gymlog.databinding.ActivityMainBinding;
+import com.cst338.gymlog.viewHolders.GymLogAdapter;
+import com.cst338.gymlog.viewHolders.GymLogViewModel;
 
 import java.util.ArrayList;
 
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int LOGGED_OUT = -1;
     private ActivityMainBinding binding;
     private GymLogRepository repository;
+    private GymLogViewModel gymLogViewModel;
     public static final String TAG = "SS_GYMLOG";
     String mExercise = "";
     double mWeight = 0.0;
@@ -47,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
      * On Create
      * Called when the activity is first created. Initializes the UI, loads user session,
      * and sets up listeners for user input and logging functionality.
-     *
      * @param savedInstanceState A Bundle containing the activity's previously saved state, if any.
      */
     @Override
@@ -56,8 +60,19 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        gymLogViewModel = new ViewModelProvider(this).get(GymLogViewModel.class);
+
+        RecyclerView recyclerView = binding.logDisplayRecyclerView;
+        final GymLogAdapter adapter = new GymLogAdapter(new GymLogAdapter.GymLogDiff());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         repository = GymLogRepository.getRepository(getApplication());
         loginUser(savedInstanceState);
+
+        gymLogViewModel.getAllLogById(loggedInUserId).observe(this, gymLogs -> {
+            adapter.submitList(gymLogs);
+        });
 
         if (loggedInUserId == -1) {
             Intent intent = LoginActivity.loginIntentFactory(getApplicationContext());
@@ -66,35 +81,23 @@ public class MainActivity extends AppCompatActivity {
 
         updateSharedPreference();
 
-        binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
-        updateDisplay();
         binding.logButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getInformationFromDisplay();
                 insertGymLogRecord();
-                updateDisplay();
+                //updateDisplay();
             }
         });
-
-        binding.exerciseInputEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateDisplay();
-            }
-        });
-
-    }
+   }
 
     /**
      * Login User
      * Handles user login by checking SharedPreferences, saved instance state,
      * and Intent extras. Also observes the logged-in User entity.
-     *
      * @param savedInstanceState The saved instance state from a previous configuration change.
      */
     private void loginUser(Bundle savedInstanceState) {
-        //check shared preference for logged in user
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(getString(R.string.preference_file_key),
                 Context.MODE_PRIVATE);
 
@@ -122,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * On Save Instance State
      * Saves the user ID to the outState Bundle and SharedPreferences before the activity is destroyed.
-     *
      * @param outState Bundle in which to place your saved state.
      */
     @Override
@@ -135,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * On Create Options Menu
      * Inflates the logout menu when the options menu is created.
-     *
      * @param menu The options menu in which you place your items.
      * @return true if the menu is inflated successfully.
      */
@@ -149,9 +150,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * On Prepare Options Menu
      * Prepares the options menu by updating the logout item with the user's username.
-     *
-     * @param menu The options menu as last shown or first initialized by
-     *             onCreateOptionsMenu().
+     * @param menu The options menu as last shown or first initialized by onCreateOptionsMenu().
      * @return true if the menu is prepared successfully.
      */
     @Override
@@ -225,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Main Activity Intent Factory
      * Creates an Intent to launch MainActivity with the given user ID.
-     *
      * @param context Context in which the intent is created.
      * @param userId  The ID of the logged-in user.
      * @return Intent to start MainActivity.
@@ -252,16 +250,13 @@ public class MainActivity extends AppCompatActivity {
      * Update Display
      * Updates the display TextView with the list of GymLogs for the current user.
      */
+    @Deprecated
     private void updateDisplay() {
         ArrayList<GymLog> alllogs = repository.getAllLogsByUserId(loggedInUserId);
-        if (alllogs.isEmpty()) {
-            binding.logDisplayTextView.setText(R.string.nothing_to_show_time_to_hit_the_gym);
-        }
         StringBuilder sb = new StringBuilder();
         for (GymLog log : alllogs) {
             sb.append(log);
         }
-        binding.logDisplayTextView.setText(sb.toString());
     }
 
     /**
