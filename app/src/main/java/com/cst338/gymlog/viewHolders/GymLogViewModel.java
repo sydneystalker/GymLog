@@ -12,15 +12,13 @@ import java.util.List;
 
 public class GymLogViewModel extends AndroidViewModel {
     private final GymLogRepository repository;
-    private final LiveData<List<GymLog>> allLogById;
-    public GymLogViewModel(Application application, int userId){
+    public GymLogViewModel(Application application){
         super(application);
         repository = GymLogRepository.getRepository(application);
-        allLogById = repository.getAllLogsByUserIdLiveData(userId);
     }
 
-    public GymLogRepository getRepository() {
-        return repository;
+    public LiveData<List<GymLog>> getAllLogById(int userId) {
+        return repository.getAllLogsByUserIdLiveData(userId);
     }
 
     public void insert(GymLog log){
