@@ -10,6 +10,7 @@ import com.cst338.gymlog.MainActivity;
 import com.cst338.gymlog.database.entities.User;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -133,12 +134,17 @@ public class GymLogRepository {
         return userDAO.getUserByUserId(userId);
     }
 
+    public LiveData<List<GymLog>> getAllLogsByUserIdLiveData(int loggedInUserId) {
+        return gymLogDAO.getRecordsetUserIdLiveData(loggedInUserId);
+    }
+
     /**
      * Retrieves all GymLog entries for a specific user.
      *
      * @param loggedInUserId The ID of the user.
      * @return A list of GymLog entries for the specified user, or null if an error occurs.
      */
+    @Deprecated
     public ArrayList<GymLog> getAllLogsByUserId(int loggedInUserId) {
         Future<ArrayList<GymLog>> future = GymLogDatabase.databaseWriteExecutor.submit(
                 new Callable<ArrayList<GymLog>>() {
